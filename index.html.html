@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meu Site</title>
+<style>
+    :root { color-scheme: light; --verde: #00a86b; --azul: #0070b8; --fundo: #eef6f4; --superficie: #fff; --campo: #f7fbfa; --texto: #17333b; --suave: #557078; --borda: #c9dfdd; }
+  :root[data-tema="escuro"] { color-scheme: dark; --verde: #20c783; --azul: #54b7f2; --fundo: #152321; --superficie: #20312f; --campo: #192a28; --texto: #e4f0ed; --suave: #b0c4bf; --borda: #3a514c; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: Arial, sans-serif; background: var(--fundo); color: var(--texto); min-height: 100vh; transition: background-color 0.2s, color 0.2s; }
+  .topo { width: 100%; height: 320px; display: flex; justify-content: center; align-items: center; border-bottom: 4px solid var(--verde); background: var(--superficie); position: relative; }
+  .topo img { width: 92%; height: 280px; object-fit: contain; display: block; }
+  .alternar-tema { position: absolute; top: 20px; right: 24px; z-index: 1; background: var(--superficie); color: var(--texto); border: 1px solid var(--borda); border-radius: 8px; padding: 10px 14px; font-size: 15px; cursor: pointer; }
+  .alternar-tema:hover { border-color: var(--verde); }
+  .alternar-tema:focus-visible { outline: 2px solid var(--verde); outline-offset: 3px; }
+  .container { display: flex; justify-content: space-between; padding: 40px; gap: 40px; align-items: flex-start; }
+  .menu-lateral { width: 250px; flex-shrink: 0; position: sticky; top: 40px; }
+  .menu-lateral h2 { margin-bottom: 20px; font-size: 18px; color: var(--verde); text-transform: uppercase; letter-spacing: 2px; }
+  .menu-lateral ul { list-style: none; }
+  .menu-lateral li { margin-bottom: 12px; }
+  .menu-lateral a { text-decoration: none; color: var(--azul); font-size: 18px; padding: 12px 16px; display: block; border-radius: 8px; background: var(--superficie); border: 1px solid var(--borda); transition: 0.2s; cursor: pointer; }
+  .menu-lateral a:hover, .menu-lateral a.ativo { background: var(--verde); border-color: var(--verde); color: #fff; transform: translateX(5px); }
+  .conteudo-meio { flex: 1; min-height: 400px; transition: 0.3s; }
+  .conteudo-meio.expandido { max-width: 100%; }
+  .secao { display: none; animation: fade 0.3s; }
+  .secao.ativa { display: block; }
+  @keyframes fade { from {opacity:0} to {opacity:1} }
+  .sobre-nos { max-width: 900px; }
+  .sobre-nos h1 { font-size: 36px; margin-bottom: 20px; }
+  .sobre-nos h2 { font-size: 28px; margin: 28px 0 12px; }
+  .sobre-nos h3 { font-size: 22px; margin-bottom: 8px; color: var(--azul); }
+  .sobre-nos p { font-size: 18px; line-height: 1.8; color: var(--suave); margin-bottom: 28px; }
+  #sobre .img-meio { display: block; margin-bottom: 6px; }
+  .sobre-nos .legenda-imagem { font-size: 13px; margin-top: 0; }
+  .sobre-nos .img-meio { width: 100%; height: auto; border-radius: 12px; margin: 10px 0 28px 0; border: 1px solid var(--borda); }
+  .link-almanaque { display: block; width: fit-content; max-width: 100%; margin: 0 auto; }
+  .capa-almanaque { display: block; width: 100%; max-width: 360px; height: auto; border-radius: 12px; border: 1px solid var(--borda); }
+  .capa-miv { max-width: 720px; }
+  .galeria-banner { width: 100%; max-width: 600px; margin: 20px auto 0; }
+  .galeria-banner img { display: block; width: 100%; height: auto; border: 0; border-radius: 12px; background: #fff; }
+  .conceito { max-width: 900px; background: var(--superficie); border: 1px solid var(--borda); border-radius: 12px; padding: 36px; }
+  .conceito h1 { font-size: 42px; margin-bottom: 24px; color: var(--texto); }
+  .conceito p { font-size: 20px; line-height: 1.7; color: var(--texto); margin-bottom: 20px; }
+  .conceito p:last-child { margin-bottom: 0; }
+  
+  .imagem-fixa { width: 350px; flex-shrink: 0; position: sticky; top: 40px; height: fit-content; transition: 0.3s; }
+  .imagem-fixa img { display: block; width: 100%; height: auto; border-radius: 12px; border: 1px solid var(--borda); }
+  .imagem-fixa.escondida { display: none; }
+  @media (max-width: 900px) { .container { flex-direction: column; } .imagem-fixa { width: 100%; position: relative; top: 0; } .menu-lateral { position: relative; top: 0; width: 100%; } }
+  @media (max-width: 480px) { .alternar-tema { top: 12px; right: 12px; padding: 8px 10px; font-size: 13px; } }
+</style>
+</head>
+<body>
+
+  <header class="topo">
+    <img src="logo.png" alt="Logo Topo">
+    <button class="alternar-tema" id="alternar-tema" type="button" aria-pressed="false" onclick="alternarTema()">🌙 Modo escuro</button>
+  </header>
+
+  <div class="container">
+    <nav class="menu-lateral">
+      <h2>Menu</h2>
+      <ul>
+        <li><a onclick="mostrar('inicio')" id="btn-inicio" class="ativo">Início</a></li>
+        <li><a onclick="mostrar('sobre')" id="btn-sobre">Sobre Nós</a></li>
+        <li><a onclick="mostrar('projetos')" id="btn-projetos">Projetos</a></li>
+        <li><a onclick="mostrar('galeria')" id="btn-galeria">Galeria</a></li>
+      </ul>
+    </nav>
+
+    <div class="conteudo-meio" id="conteudo-meio">
+      <div id="inicio" class="secao ativa conceito">
+        <h1>Conceito</h1>
+        <p>A nova Epson une precisão e responsabilidade ecológica. Transformando inteligência técnica em força regenerativa, criamos soluções eficientes para devolver recursos à própria Terra.</p>
+        <p>Inovação que renova, tecnologia precisa e um futuro sustentável. Buscamos transformar operações com eficiência ecológica, sem abrir mão da alta performance, reduzindo o consumo de energia e de recursos.</p>
+        <p>O novo logotipo, com folhas minimalistas, está disposto de forma fluida, evocando o conceito de economia circular e o ciclo regenerativo da natureza. O traço minimalista e limpo traduz na criação de produtos menos poluentes, refletindo a máxima eficiência ecológica.</p>
+      </div>
+      <div id="sobre" class="secao sobre-nos">
+        <h1>Sobre Nós</h1>
+        <h2>1.1 Conceito da Marca</h2>
+        <p>O DNA da marca consiste na junção dos atributos em forma de um conceito.</p>
+        <h2>Atributos da Marca</h2>
+        <h3>Assertivo</h3>
+        <p>Nossa marca busca ser clara e firme na comercialização e na comunicação com o público e, ao mesmo tempo, respeitosa, mantendo um discurso direto e expressando nossas opiniões quando necessário.</p>
+        <h3>Consciencioso</h3>
+        <p>Como sugere o significado da palavra, nossa empresa é meticulosa nas tarefas e responsável, evitando desleixo com nossos clientes e agindo com honestidade, ética e cuidado, principalmente com o meio ambiente.</p>
+        <h3>Humanitário</h3>
+        <p>O termo humanitário se refere a princípios ou ações que aliviam o sofrimento humano e promovem o bem-estar. A Epson busca contribuir para o bem-estar ecológico, evitando o desmatamento e diminuindo o sofrimento humano.</p>
+        <img class="img-meio" src="foto-sobre.png" alt="Jardim com áreas verdes e arquitetura moderna da Epson">
+        <p class="legenda-imagem">imagens retiradas das aplicações do miv epson.</p>
+      </div>
+      <div id="projetos" class="secao sobre-nos">
+        <h1>Projetos</h1>
+        <div style="margin-bottom: 60px; padding-bottom: 40px; border-bottom: 1px solid var(--borda);">
+          <p><strong style="color:var(--azul);">Almanaque Epson</strong></p>
+          <a class="link-almanaque" href="almanaque-epson.pdf" target="_blank" rel="noopener noreferrer" aria-label="Abrir Almanaque Epson em PDF">
+            <img class="capa-almanaque" src="almanaque-capa.png" alt="Capa do Almanaque Epson">
+          </a>
+        </div>
+        <div style="margin-bottom: 60px;">
+          <p><strong style="color:var(--azul);">MIV mascote Epson</strong></p>
+          <a class="link-almanaque" href="miv-mascote-epson.pdf" target="_blank" rel="noopener noreferrer" aria-label="Abrir MIV mascote Epson em PDF">
+            <img class="capa-almanaque capa-miv" src="miv-mascote-capa.png" alt="Capa do Manual de Identidade Visual do Mascote Epson">
+          </a>
+        </div>
+      </div>
+      <div id="galeria" class="secao">
+        <h1>Galeria</h1>
+        <div class="galeria-banner">
+          <img src="banner-60x90.png" alt="Banner Epson 60 por 90">
+        </div>
+      </div>
+    </div>
+
+    <aside class="imagem-fixa" id="imagem-fixa">
+      <img src="imagem-lateral.png" alt="Espaço de trabalho da Epson">
+    </aside>
+  </div>
+
+<script>
+function mostrar(id) {
+  document.querySelectorAll('.secao').forEach(s => s.classList.remove('ativa'));
+  document.querySelectorAll('.menu-lateral a').forEach(a => a.classList.remove('ativo'));
+  document.getElementById(id).classList.add('ativa');
+  document.getElementById('btn-'+id).classList.add('ativo');
+  const lateral = document.getElementById('imagem-fixa');
+  const meio = document.getElementById('conteudo-meio');
+  if (id === 'sobre' || id === 'projetos') {
+    lateral.classList.add('escondida');
+    meio.classList.add('expandido');
+  } else {
+    lateral.classList.remove('escondida');
+    meio.classList.remove('expandido');
+  }
+}
+</script>
+<script>
+const botaoTema = document.getElementById('alternar-tema');
+
+function aplicarTema(tema) {
+  const escuro = tema === 'escuro';
+  document.documentElement.dataset.tema = escuro ? 'escuro' : 'claro';
+  botaoTema.textContent = escuro ? '☀️ Modo claro' : '🌙 Modo escuro';
+  botaoTema.setAttribute('aria-pressed', String(escuro));
+}
+
+function alternarTema() {
+  const novoTema = document.documentElement.dataset.tema === 'escuro' ? 'claro' : 'escuro';
+  aplicarTema(novoTema);
+}
+
+aplicarTema('claro');
+</script>
+</body>
+</html>*/
